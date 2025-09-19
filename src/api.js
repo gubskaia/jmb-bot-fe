@@ -1,8 +1,16 @@
 const BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
+// Получить Telegram user ID (fallback на localStorage для dev)
+const getTelegramUserId = () => {
+    if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
+        return window.Telegram.WebApp.initDataUnsafe.user.id.toString();
+    }
+    // Fallback для dev
+    return localStorage.getItem("voterId") || Math.random().toString(36).slice(2);
+};
+
 export async function fetchPetitions(params = {}) {
     const validParams = {};
-    // Only include defined and non-"undefined" values
     if (params.q && params.q !== "undefined") validParams.q = params.q;
     if (params.category && params.category !== "undefined") validParams.category = params.category;
     if (params.region && params.region !== "undefined") validParams.region = params.region;
@@ -11,7 +19,8 @@ export async function fetchPetitions(params = {}) {
     if (params.sort && params.sort !== "undefined") validParams.sort = params.sort;
 
     const qs = new URLSearchParams(validParams).toString();
-    const res = await fetch(`${BASE}/api/petitions${qs ? `?${qs}` : ""}`);
+    const url = `${BASE}/api/petitions${qs ? `?${qs}` : ""}`;
+    const res = await fetch(url);
     if (!res.ok) {
         const error = await res.json();
         throw new Error(error.error || "Failed to fetch petitions");
@@ -37,7 +46,7 @@ export async function createPetition(body) {
     const res = await fetch(`${BASE}/api/petitions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(body)
     });
     if (!res.ok) {
         const error = await res.json();
@@ -47,10 +56,11 @@ export async function createPetition(body) {
 }
 
 export async function votePetition(id, voterId) {
+    const telegramVoterId = getTelegramUserId();
     const res = await fetch(`${BASE}/api/petitions/${id}/vote`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-voter-id": voterId },
-        body: JSON.stringify({}),
+        headers: { "Content-Type": "application/json", "x-voter-id": telegramVoterId },
+        body: JSON.stringify({})
     });
     if (!res.ok) {
         const error = await res.json();
@@ -60,8 +70,9 @@ export async function votePetition(id, voterId) {
 }
 
 export async function fetchPetition(id, voterId) {
+    const telegramVoterId = getTelegramUserId();
     const res = await fetch(`${BASE}/api/petitions/${id}`, {
-        headers: { "x-voter-id": voterId || "" },
+        headers: { "x-voter-id": telegramVoterId }
     });
     if (!res.ok) {
         const error = await res.json();

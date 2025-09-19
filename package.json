@@ -7,6 +7,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@telegram-apps/sdk": "^3.11.5",
     "lodash": "^4.17.21",
     "lucide-react": "^0.400.0",
     "react": "^18.2.0",

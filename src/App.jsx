@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
@@ -9,6 +9,25 @@ import PetitionDetail from "./components/PetitionDetail";
 export default function App() {
     const location = useLocation();
     const showHeader = location.pathname !== "/";
+
+    useEffect(() => {
+        if (window.Telegram?.WebApp) {
+            // Главная кнопка TMA
+            const mainButton = window.Telegram.WebApp.MainButton;
+            mainButton.setText("Создать петицию").show().onClick(() => {
+                window.location.href = "/create";
+            });
+
+            // Back button
+            if (location.pathname !== "/") {
+                window.Telegram.WebApp.BackButton.show().onClick(() => {
+                    window.history.back();
+                });
+            } else {
+                window.Telegram.WebApp.BackButton.hide();
+            }
+        }
+    }, [location.pathname]);
 
     return (
         <div className="app">
