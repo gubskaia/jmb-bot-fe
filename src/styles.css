@@ -1,0 +1,101 @@
+:root{
+    --blue:#5fb4ff; /* light blue */
+    --blue-600:#1ea0ff;
+    --bg: #ffffff;
+    --muted:#6b7280;
+    --radius:14px;
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* Mobile-first container */
+body{
+    margin:0;
+    background:var(--bg);
+    color:#0f172a;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding: 16px;
+}
+
+.header {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:12px;
+}
+.logo {
+    background: linear-gradient(135deg,var(--blue), var(--blue-600));
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-weight:700;
+}
+.title {
+    font-size:18px;
+    font-weight:600;
+}
+
+.card{
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    padding:12px;
+    margin-bottom:12px;
+}
+
+/* search + filters */
+.searchRow{
+    display:flex;
+    gap:8px;
+    margin-bottom:12px;
+}
+.searchRow input, .searchRow select{
+    flex:1;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #e6edf7;
+    outline:none;
+    font-size:14px;
+}
+
+.petition-title{
+    font-weight:600;
+    font-size:15px;
+    margin-bottom:6px;
+}
+.petition-desc{
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:6px;
+}
+.petition-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    color:var(--muted);
+}
+.vote-btn{
+    background: linear-gradient(90deg,var(--blue),var(--blue-600));
+    color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:10px;
+    font-weight:600;
+    cursor:pointer;
+}
+.small{
+    font-size:12px;
+}
+
+/* responsive grid for larger screens */
+@media(min-width:720px){
+    body{ padding:24px; }
+    .container{ max-width:900px; margin:0 auto; }
+    .searchRow input{ font-size:16px; }
+}
