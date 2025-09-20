@@ -1,25 +1,67 @@
-import React, { useState } from "react";
-import Hero from "../components/Hero";
-import TopPetitions from "../components/TopPetitions";
-import { votePetition } from "../api";
+import React, { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
+import PetitionCard from "../components/PetitionCard";
+import { fetchPetitions } from "../api";
 
 export default function Home() {
-    const [votedMap, setVotedMap] = useState({});
+    const [topPetitions, setTopPetitions] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    async function handleVote(id) {
+    const loadTopPetitions = useCallback(async () => {
+        setLoading(true);
         try {
-            const voterId = localStorage.getItem("voterId");
-            await votePetition(id, voterId);
-            setVotedMap(prev => ({ ...prev, [id]: true }));
-        } catch (error) {
-            alert("Не удалось проголосовать: " + error.message);
+            const res = await fetchPetitions({ top: true });
+            setTopPetitions(res.data || []);
+        } catch (err) {
+            console.error("Fetch error:", err.message);
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
-    }
+    }, []);
+
+    useEffect(() => {
+        loadTopPetitions();
+    }, [loadTopPetitions]);
 
     return (
-        <>
-            <Hero />
-            <TopPetitions onVote={handleVote} votedMap={votedMap} />
-        </>
+        <main className="home-container" role="main">
+            <header className="home-header">
+                <h1 className="home-title">JMD Петиции</h1>
+                <p className="home-subtitle">
+                    Создавайте и поддерживайте инициативы для изменений
+                </p>
+            </header>
+
+            <section className="top-petitions" aria-label="Популярные петиции">
+                <h2 className="top-petitions-title">Популярные петиции</h2>
+                {error && <div className="error-message">{error}</div>}
+                {loading ? (
+                    <div className="loading">
+                        <div className="skeleton skeleton-card"></div>
+                        <div className="skeleton skeleton-card"></div>
+                        <div className="skeleton skeleton-card"></div>
+                    </div>
+                ) : topPetitions.length === 0 ? (
+                    <div className="empty">Популярные петиции не найдены</div>
+                ) : (
+                    <div className="petitions-grid">
+                        {topPetitions.map((p) => (
+                            <PetitionCard key={p.id} p={p} />
+                        ))}
+                    </div>
+                )}
+            </section>
+
+            <section className="actions" aria-label="Действия">
+                <Link to="/search" className="action-btn">
+                    Найти петиции
+                </Link>
+                <Link to="/create" className="action-btn">
+                    Создать петицию
+                </Link>
+            </section>
+        </main>
     );
 }
