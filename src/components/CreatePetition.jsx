@@ -179,7 +179,7 @@ export default function CreatePetition() {
                                 id="authorName"
                                 type="text"
                                 name="authorName"
-                                placeholder="Введите ваше настоящее имя (обязательно)"
+                                placeholder="Введите ваше имя"
                                 value={formData.authorName}
                                 onChange={handleChange}
                                 onBlur={handleBlur}

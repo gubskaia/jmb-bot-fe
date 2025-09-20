@@ -8,30 +8,23 @@ export default function PetitionCard({ p, onVote, voted }) {
         if (window.Telegram?.WebApp) {
             const shareUrl = `https://your-app.vercel.app/petition/${p.id}`; // Replace with your Vercel URL
             const shareText = `Поддержите петицию: ${p.title}`;
-            window.Telegram.WebApp.showPopup({
-                title: "Поделиться петицией",
-                message: `Поделиться "${p.title}"?`,
-                buttons: [
-                    {
-                        id: "share",
-                        type: "default",
-                        text: "Поделиться",
-                    },
-                    {
-                        type: "cancel",
-                        text: "Отмена",
-                    },
-                ],
-            }, (buttonId) => {
-                if (buttonId === "share") {
-                    window.Telegram.WebApp.sendData(JSON.stringify({
-                        action: "share",
-                        url: shareUrl,
-                        text: shareText,
-                    }));
-                    window.Telegram.WebApp.openLink(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`);
+            window.Telegram.WebApp.showPopup(
+                {
+                    title: "Поделиться петицией",
+                    message: `Поделиться "${p.title}"?`,
+                    buttons: [
+                        { id: "share", type: "default", text: "Поделиться" },
+                        { type: "cancel", text: "Отмена" },
+                    ],
+                },
+                (buttonId) => {
+                    if (buttonId === "share") {
+                        window.Telegram.WebApp.openLink(
+                            `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`
+                        );
+                    }
                 }
-            });
+            );
         } else {
             navigator.share({
                 title: p.title,
@@ -73,7 +66,8 @@ export default function PetitionCard({ p, onVote, voted }) {
                     onClick={handleShare}
                     aria-label="Поделиться петицией"
                 >
-                    <Share2 size={16} />
+                    <Share2 size={16} className="share-icon" />
+                    Поделиться
                 </button>
             </div>
         </div>
