@@ -13,10 +13,10 @@ export default function App() {
     useEffect(() => {
         if (window.Telegram?.WebApp) {
             // Главная кнопка TMA
-            const mainButton = window.Telegram.WebApp.MainButton;
-            mainButton.setText("Создать петицию").show().onClick(() => {
-                window.location.href = "/create";
-            });
+            // const mainButton = window.Telegram.WebApp.MainButton;
+            // mainButton.setText("Создать петицию").show().onClick(() => {
+            //     window.location.href = "/create";
+            // });
 
             // Back button
             if (location.pathname !== "/") {
